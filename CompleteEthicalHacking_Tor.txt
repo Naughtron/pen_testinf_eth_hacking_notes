@@ -1,0 +1,19 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Tor, proxy, and vpns aka: awesome ways to avoid firewall rules! 
+
+To install Tor: 
+1. get Tor: apt-get install tor -y
+2. create a new user: adduser username
+3. login as that user - DO NOT GO ONLINE AS ROOT unless you know exactly what you are doing.
+4. Get Tor from here: https://www.torproject.org/download/download-easy.html.en
+ The way tor works: 
+ - Tor connects to varrious torn network nodes and your actual request comes from the exit node. 
+ You are using multiple proxy. You can also "Torify" application connections. Heads up this is SLOW. 
+
+Some sites you may want to check out: 
+- hidden wiki current URL http://zqktlwi4fecvo6ri.onion/wiki/index.php/Main_Page
+- good resources: 
+- http://rrcc5uuudhh4oz3c.onion/ <----intel exchange
+--> software is a good place to look. DO NOT RUN ANYTHING ON YOUR REG MACHINE!
+https://blog.udemy.com/sql-injection-tutorial/ <-- SQL Injection 

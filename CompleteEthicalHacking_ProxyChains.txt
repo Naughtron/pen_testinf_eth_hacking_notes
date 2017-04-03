@@ -1,0 +1,74 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Proxy Chains. Cover your footprints. 
+
+1. Modify your proxychains.config file
+nano /etc/proxychains.conf
+
+2. Types you can use: 
+HTTP, SOCKS4, SOCKS5 tunneling proxifier with DNS.
+- SOCKS5 is the best option [supports IPv6 and UDP unlike 4]
+
+3. Options: 
+
+dynamic_chain - this is the most common option. it is the most stable. As long as a one proxy in your chain is functional it will work, and there is no specific order to the connection chain.
+
+random_chain - each connection is done with a new proxy
+
+proxy_dns - this will hide you local ISP DNS requesting address. 
+
+4. Example Proxy Setting: 
+socks5  192.168.67.78   1080    lamer      secret
+TYPE    ADDRESS         PORT    Username   Password
+
+5. You can check is Tor is running with: 
+service tor status
+
+6. You can start Tor with: 
+service tor start
+
+7. Verify setup:
+proxychains firefox www.duckduckgo.com
+
+Verification: 
+- Validate that you got to the site
+- Validate 
+|D-chain|-<>-127.0.0.1:9050-<><>-x.x.x.x:53-<><>-OK
+|DNS-response| safebrowsing-cache.google.com is xxx.xx.xxx.xx
+- Go to https://www.dnsleaktest.com/ and check that the location is "wrong"
+In my case: 
+Hello 199.249.223.68
+from San Angelo, United States
+
+8. Route nmap traffic through a Proxy Chain
+proxychains nmap ip port args....
+proxychains firefox
+
+YOU CAN DO THIS WITH LOTS OF APPLICATIONS! 
+
+9. See if you can find free socks5 proxy's
+http://www.socks-proxy.net/ <-- just be careful
+countrys to "trust":
+
+China
+Russia
+Germany
+
+You would add the additional proxy just like above. Just add a lot, because not all of them are going to work. 
+Remember to close your borwser whenever you make changes else will not take effect.
+
+Keep this list low, as you are going to route through them, and if you have a massive list then you are going to have to wait for lots of timeouts. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

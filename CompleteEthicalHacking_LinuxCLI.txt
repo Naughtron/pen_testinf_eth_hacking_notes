@@ -1,0 +1,39 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Linux Terminal
+
+added pack to shift+ctrl_t for tabs in terminal 
+
+cp /path_to_file /directory_to_copy_to copy a file from one location to another you can add -v for verbose 
+
+man with some_command will give you full description of a given command
+
+mv file_or_folder new_file_name move or rename a file. move is not copy its gone from the source folder 
+
+cat file_name show you the contents of a file no matter what it is. Just read no changes. 
+
+less file_name - creates a new workspace to view a file 
+
+grep - grab things from a file so for example: 
+cat some_file.txt | grep foo 
+
+mkdir - create a directory 
+
+rm - remove file 
+
+chmod - change mode of a file. +r +w +x [read, write, exe]
+
+chown username:usergroup - change owner of a file. 
+
+ls /dir/ -  lists contents of folder 
+
+ls -la - lists all files including hidden 
+
+some_command with --help lists all options available 
+
+echo - you can also write into a file with echo. Example echo "always be testing" > test_file
+
+touch file_name(s) - quick way to create files. you can also include dir paths.
+
+mkdir - make directory 
+
