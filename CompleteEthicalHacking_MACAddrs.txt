@@ -1,0 +1,48 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: MAC Addrs
+
+1. you can see you MAC with: 
+ifconfig, then just look for HWaddr
+
+- First 3 sets of the address are the hardware maker 
+- Last 3 sets are used by the maker 
+
+2. this address WILL NOT leave the local network / default gateway
+
+3. we can change it with: 
+macchanger 
+
+4. show a device: 
+macchanger --s eth0 <-- example
+
+5. assign a random MAC addr with -r:
+macchanger -r eth0
+
+result: 
+New MAC:       1e:fc:e8:51:50:8b (unknown) <-- or something else random
+
+6. reset things with -p
+macchanger -p eth0
+
+7. find all known vendor with -l
+
+8. you can set the address with -m! You could set your address to a victim :) 
+
+9. you can run this as a cron job as well: 
+a. crontab -e
+b. pick and editor
+c. @reboot macchanger -r eth0 
+
+script version: 
+#!/bin/bash
+
+ifconfig eth0 down
+Sleep 2 
+macchanger -r eth0
+Sleep 2
+ifconfig eth0 up
+
+
+
+
