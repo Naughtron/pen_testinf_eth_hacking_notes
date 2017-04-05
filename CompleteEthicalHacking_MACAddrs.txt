@@ -38,9 +38,9 @@ script version:
 #!/bin/bash
 
 ifconfig eth0 down
-Sleep 2 
+sleep 2 
 macchanger -r eth0
-Sleep 2
+sleep 2
 ifconfig eth0 up
 
 
