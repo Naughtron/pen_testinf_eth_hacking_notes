@@ -1,0 +1,73 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: VPNs
+
+1. change your DNS settings
+
+2. view your current dns settings
+/etc/ cat resolv.conf 
+
+3. edit your dhclient.conf
+nano /etc/dhcp/dhclient.conf
+
+4. look for #prepend domain-name-servers 127.0.0.1; and un-comment it. 
+This is where you are going to add new name servers. 
+https://www.opendns.com/ 
+208.67.222.222
+208.67.220.220
+
+Now looks like: 
+prepend domain-name-servers 208.67.222.222, 208.67.220.220;
+
+5. bounce the network config after making your changes: 
+service network-manager restart
+
+6. check that the changes took effect: 
+cat resolv.conf
+nameserver 208.67.222.222
+nameserver 208.67.220.220
+nameserver 192.168.0.1
+
+6a. PROTIP. If you never want your own dns to be used go back into the dhclient.conf file and add a third address. this will bump yours out of the resolv.conf. See if you can find one in the netherlands. https://db-ip.com/all/208.69.35
+
+
+example:
+nameserver 208.67.222.222 <- openDNS
+nameserver 208.67.220.220 <- openDNS
+nameserver 8.8.8.8 <- Google
+
+DONT FORGET TO RESTART THE NETWORK MANAGER
+
+7. Open a browser on the kali box and type in "about:config". Click ok at the warning.
+
+8. Search for media.peerconnection.enable, double click the Value, so it is "false". Close the browser.
+
+9. go to http://www.vpnbook.com/ download a client 
+Username: vpnbook
+Password: 3XN34ps
+
+10. close the browser. You need to do this while you config the VPN
+
+11. cd into Downloads. 
+
+12. unzip VPNBook.....
+
+13. Divert from class because thing have changed. 
+- apt-get open-vpn
+- go to the location of the clients
+- run the following command:
+openvpn --config vpnbook-de233-tcp443.ovpn 
+
+enter username 
+enter password
+
+Need to generate certs....
+
+
+
+
+
+
+
+
+
