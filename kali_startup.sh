@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # start tor
 service tor start
 # spin up new mac addr for wifi
