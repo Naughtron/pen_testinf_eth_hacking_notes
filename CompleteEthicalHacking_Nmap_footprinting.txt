@@ -1,0 +1,190 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Nmap and footprinting
+
+- a valid target woud be: 
+http://scanme.nmap.org/
+https://www.hackthissite.org/
+
+- this will cause alarms on a firewall
+
+1.  verbost scan 
+nmap -v -A domain_name or IPAddy
+
+2. -iL file_name
+allows you to create a file full of ip addresses
+
+3. with the traceroute data you can find info with whois: 
+root@kali:~# whois 45.33.32.156
+
+NetRange:       45.33.0.0 - 45.33.127.255
+CIDR:           45.33.0.0/17
+NetName:        LINODE-US
+NetHandle:      NET-45-33-0-0-1
+Parent:         NET45 (NET-45-0-0-0-0)
+NetType:        Direct Allocation
+OriginAS:       AS3595, AS21844, AS6939, AS8001
+Organization:   Linode (LINOD)
+RegDate:        2015-03-20
+Updated:        2015-03-20
+Comment:        Linode, LLC 
+Comment:        http://www.linode.com
+Ref:            https://whois.arin.net/rest/net/NET-45-33-0-0-1
+
+
+OrgName:        Linode
+OrgId:          LINOD
+Address:        329 E. Jimmie Leeds Road
+Address:        Suite A
+City:           Galloway
+StateProv:      NJ
+PostalCode:     08205
+Country:        US
+RegDate:        2008-04-24
+Updated:        2017-01-28
+Comment:        http://www.linode.com
+Ref:            https://whois.arin.net/rest/org/LINOD
+
+
+
+4. or nslookup
+root@kali:~# nslookup 45.33.32.156
+Server:		208.67.222.222
+Address:	208.67.222.222#53
+
+Non-authoritative answer:
+156.32.33.45.in-addr.arpa	name = scanme.nmap.org.
+
+root@kali:~# nslookup scanme.nmap.org
+Server:		208.67.222.222
+Address:	208.67.222.222#53
+
+Non-authoritative answer:
+Name:	scanme.nmap.org
+Address: 45.33.32.156
+
+---scanning---
+vv = extra verbose
+default scan is 1000 max is 65000
+
+1. nmap -vv scanme.nmap.org
+
+Example output: 
+Starting Nmap 7.40 ( https://nmap.org ) at 2017-04-03 19:43 EDT
+Warning: Hostname scanme.nmap.org resolves to 2 IPs. Using 45.33.32.156.
+Initiating Ping Scan at 19:43
+Scanning scanme.nmap.org (45.33.32.156) [4 ports]
+Completed Ping Scan at 19:43, 0.12s elapsed (1 total hosts)
+Initiating Parallel DNS resolution of 1 host. at 19:43
+Completed Parallel DNS resolution of 1 host. at 19:43, 0.03s elapsed
+Initiating SYN Stealth Scan at 19:43
+Scanning scanme.nmap.org (45.33.32.156) [1000 ports]
+Discovered open port 80/tcp on 45.33.32.156
+Discovered open port 22/tcp on 45.33.32.156
+Discovered open port 9929/tcp on 45.33.32.156
+Discovered open port 31337/tcp on 45.33.32.156
+Completed SYN Stealth Scan at 19:43, 2.55s elapsed (1000 total ports)
+Nmap scan report for scanme.nmap.org (45.33.32.156)
+Host is up, received reset ttl 55 (0.083s latency).
+Other addresses for scanme.nmap.org (not scanned): 2600:3c01::f03c:91ff:fe18:bb2f
+Scanned at 2017-04-03 19:43:17 EDT for 3s
+Not shown: 990 closed ports
+Reason: 990 resets
+PORT      STATE    SERVICE        REASON
+22/tcp    open     ssh            syn-ack ttl 56
+25/tcp    filtered smtp           no-response
+80/tcp    open     http           syn-ack ttl 55
+135/tcp   filtered msrpc          no-response
+139/tcp   filtered netbios-ssn    no-response
+445/tcp   filtered microsoft-ds   no-response
+593/tcp   filtered http-rpc-epmap no-response
+4444/tcp  filtered krb524         no-response
+9929/tcp  open     nping-echo     syn-ack ttl 55
+31337/tcp open     Elite          syn-ack ttl 56
+
+filtered = firewall setting is active nmap can't tell if it is open or closed
+see what you can do with the open ports
+
+2. scanning a wide range of IP addeesses:
+
+remember this will be way slower over the internet 
+
+-oG is grep'able output 
+> redirect to a file
+this will scan 0 to 255
+-p provide a port
+
+nmap -oG - 192.168.0.0-255 -p 22 -vv > /home/scan
+
+3. grep through the contents: 
+root@kali:/home# grep -i 'ssh' scan 
+Host: 192.168.0.1 ()	Ports: 22/filtered/tcp//ssh///
+Host: 192.168.0.2 ()	Ports: 22/closed/tcp//ssh///
+Host: 192.168.0.3 ()	Ports: 22/closed/tcp//ssh///
+Host: 192.168.0.4 ()	Ports: 22/filtered/tcp//ssh///
+Host: 192.168.0.5 ()	Ports: 22/filtered/tcp//ssh///
+Host: 192.168.0.6 ()	Ports: 22/filtered/tcp//ssh///
+Host: 192.168.0.7 ()	Ports: 22/closed/tcp//ssh///
+Host: 192.168.0.10 ()	Ports: 22/filtered/tcp//ssh///
+Host: 192.168.0.11 ()	Ports: 22/filtered/tcp//ssh///
+Host: 192.168.0.19 ()	Ports: 22/closed/tcp//ssh///
+Host: 192.168.0.20 ()	Ports: 22/closed/tcp//ssh///
+Host: 192.168.0.21 ()	Ports: 22/closed/tcp//ssh///
+Host: 192.168.0.24 ()	Ports: 22/filtered/tcp//ssh///
+Host: 192.168.0.26 ()	Ports: 22/closed/tcp//ssh///
+Host: 192.168.0.17 ()	Ports: 22/closed/tcp//ssh///
+
+OR: 
+
+root@kali:/home# grep -i 'Status: Up' scan 
+Host: 192.168.0.1 ()	Status: Up
+Host: 192.168.0.2 ()	Status: Up
+Host: 192.168.0.3 ()	Status: Up
+Host: 192.168.0.4 ()	Status: Up
+Host: 192.168.0.5 ()	Status: Up
+Host: 192.168.0.6 ()	Status: Up
+Host: 192.168.0.7 ()	Status: Up
+Host: 192.168.0.10 ()	Status: Up
+Host: 192.168.0.11 ()	Status: Up
+Host: 192.168.0.19 ()	Status: Up
+Host: 192.168.0.20 ()	Status: Up
+Host: 192.168.0.21 ()	Status: Up
+Host: 192.168.0.24 ()	Status: Up
+Host: 192.168.0.26 ()	Status: Up
+Host: 192.168.0.17 ()	Status: Up
+
+so lets say you wanted to pass IP info to a program you can use awk: 
+-F field delimiter 
+" " going to filter on space
+'{print $2}' is going to print out the second field 
+> file_name this allows you to pass it to a new file 
+
+root@kali:/home# cat scan | grep Up | awk -F " " '{print $2}' > scan 2
+192.168.0.1
+192.168.0.2
+192.168.0.3
+192.168.0.4
+192.168.0.5
+192.168.0.6
+192.168.0.7
+192.168.0.10
+192.168.0.11
+192.168.0.19
+192.168.0.20
+192.168.0.21
+192.168.0.24
+192.168.0.26
+192.168.0.17
+
+Now that you have it in a new file you can run:
+nmap -iL scan2 -vv
+
+this will go against hosts that you know are alive.  
+
+
+
+
+
+
+
+

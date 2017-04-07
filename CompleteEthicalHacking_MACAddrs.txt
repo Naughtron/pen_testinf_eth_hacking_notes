@@ -35,13 +35,19 @@ b. pick and editor
 c. @reboot macchanger -r eth0 
 
 script version: 
+
 #!/bin/bash
 
 ifconfig eth0 down
-Sleep 2 
+sleep 2
 macchanger -r eth0
-Sleep 2
+sleep 2
 ifconfig eth0 up
+
+chmod the script -x name_of_script.sh
+
+crontab -e
+@reboot path/to/script/name_of_script.sh
 
 
 
