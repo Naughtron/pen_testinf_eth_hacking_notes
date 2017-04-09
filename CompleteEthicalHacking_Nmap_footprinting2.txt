@@ -1,0 +1,32 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Nmap and footprinting continued
+External Sources and other tricks 
+
+1. gather ip info using curl: 
+curl ipinfo.io/some_ip_address
+
+example: 
+root@kali:/home# curl ipinfo.io/45.33.32.156
+{  "ip": "45.33.32.156",
+  "hostname": "scanme.nmap.org",
+  "city": "Fremont",
+  "region": "California",
+  "country": "US",
+  "loc": "37.5670,-121.9829",
+  "org": "AS63949 Linode, LLC",
+  "postal": "94536"
+}
+
+Make note that game back as a json blob. 
+
+2. Good starting point: 
+https://nmap.org/nsedoc/
+
+here is a fun one! 
+https://nmap.org/nsedoc/scripts/firewall-bypass.html
+https://nmap.org/nsedoc/categories/fuzzer.html
+
+3. Exploit DB:
+https://www.exploit-db.com/
+
