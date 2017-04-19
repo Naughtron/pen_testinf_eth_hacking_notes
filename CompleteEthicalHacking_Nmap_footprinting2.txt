@@ -30,3 +30,4 @@ https://nmap.org/nsedoc/categories/fuzzer.html
 3. Exploit DB:
 https://www.exploit-db.com/
 
+4. -o will give you OS ditection.
