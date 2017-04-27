@@ -70,3 +70,4 @@ ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http-alt
 12. Start with IE...wow
 You are basically looking for instance where http is used on login. 
 Firefox and Chrome are also weak on some sites. 
+.

